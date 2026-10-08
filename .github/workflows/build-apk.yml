@@ -13,14 +13,23 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Move nested files if uploaded inside subfolder
+      - name: Auto-Fix: Find Files & Unzip If Needed
         run: |
-          if [ ! -f "package.json" ]; then
-            SUBDIR=$(find . -maxdepth 2 -name "package.json" -exec dirname {} \; | head -n 1)
-            if [ -n "$SUBDIR" ] && [ "$SUBDIR" != "." ]; then
-              echo "Moving files from $SUBDIR to root..."
+          # Αν ανέβηκε αρχείο zip, το αποσυμπιέζει μόνο του
+          ZIP_FILE=$(find . -maxdepth 2 -name "*.zip" | head -n 1)
+          if [ -n "$ZIP_FILE" ]; then
+            echo "Βρέθηκε zip αρχείο, αποσυμπίεση..."
+            unzip -o "$ZIP_FILE"
+          fi
+
+          # Ψάχνει το package.json σε οποιονδήποτε υποφάκελο κι αν μπήκε
+          PKG_PATH=$(find . -name "package.json" -not -path "*/node_modules/*" | head -n 1)
+          if [ -n "$PKG_PATH" ]; then
+            TARGET_DIR=$(dirname "$PKG_PATH")
+            echo "Βρέθηκε το έργο στον φάκελο: $TARGET_DIR"
+            if [ "$TARGET_DIR" != "." ]; then
               shopt -s dotglob
-              mv $SUBDIR/* .
+              cp -r "$TARGET_DIR"/* . || true
             fi
           fi
 

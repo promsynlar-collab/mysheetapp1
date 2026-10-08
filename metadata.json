@@ -1,0 +1,8 @@
+{
+  "name": "APK, Google Sheets & Serverless Architecture Guide",
+  "description": "Τεχνική ανάλυση και διαδραστικός οδηγός για αυτόνομες εφαρμογές (APK/EXE), Google Sheets ως βάση δεδομένων και serverless λειτουργία.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
